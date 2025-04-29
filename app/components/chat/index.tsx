@@ -83,19 +83,23 @@ const Chat: FC<IChatProps> = ({
     onClear,
   } = useImageFiles()
 
-  const handleSend = () => {
-    if (!valid() || (checkCanSend && !checkCanSend()))
+  const handleSend = (customQuery?: string) => {
+    const messageToSend = customQuery !== undefined ? customQuery : query
+
+    if ((!messageToSend || messageToSend.trim() === '') || (checkCanSend && !checkCanSend()))
       return
-    onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({
+
+    onSend(messageToSend, files.filter(file => file.progress !== -1).map(fileItem => ({
       type: 'image',
       transfer_method: fileItem.type,
       url: fileItem.url,
       upload_file_id: fileItem.fileId,
     })))
+
     if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
       if (files.length)
         onClear()
-      if (!isResponding)
+      if (!isResponding && !customQuery)
         setQuery('')
     }
   }
@@ -140,6 +144,39 @@ const Chat: FC<IChatProps> = ({
             <p className="mt-4 text-center text-gray-600 max-w-md">
               Welcome to Semio Academy's intelligent assistant. Ask any question about our courses, schedule, or learning materials.
             </p>
+
+            {/* Question Buttons */}
+            <div className="mt-8 w-full max-w-md space-y-3">
+              <button
+                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  const question = "What courses are available this semester?";
+                  handleSend(question);
+                }}
+              >
+                <p className="font-medium">What courses are available this semester?</p>
+              </button>
+
+              <button
+                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  const question = "How do I register for a class?";
+                  handleSend(question);
+                }}
+              >
+                <p className="font-medium">How do I register for a class?</p>
+              </button>
+
+              <button
+                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  const question = "What learning resources are available?";
+                  handleSend(question);
+                }}
+              >
+                <p className="font-medium">What learning resources are available?</p>
+              </button>
+            </div>
           </div>
         )}
 
