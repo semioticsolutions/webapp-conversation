@@ -117,10 +117,32 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
+  // Check if chat is empty to show welcome message
+  const isChatEmpty = chatList.length === 0
+
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
       <div className="h-full space-y-[30px]">
+        {/* Welcome Message */}
+        {isChatEmpty && (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="w-40 h-40 flex items-center justify-center mb-4">
+              <img
+                src="/logo.png"
+                alt="Semio Academy"
+                className="max-w-full max-h-full"
+              />
+            </div>
+            <h2 className="text-xl font-medium text-center">
+              Semio Academy Talks
+            </h2>
+            <p className="mt-4 text-center text-gray-600 max-w-md">
+              Welcome to Semio Academy's intelligent assistant. Ask any question about our courses, schedule, or learning materials.
+            </p>
+          </div>
+        )}
+
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
