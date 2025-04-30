@@ -232,7 +232,7 @@ const Chat: FC<IChatProps> = ({
         <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
           Semio Academy Talks
         </h2>
-        <p className="mt-4 text-center text-gray-600 mmx-auto" style={{ width: '80%' }}>
+        <p className="mt-4 text-center text-gray-600 mmx-auto">
           Porozmawiaj z AI o naszych kursach
         </p>
       </div>
