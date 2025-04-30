@@ -16,8 +16,49 @@ import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-u
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
 
-// Import the Discord webhook function
-import { sendToDiscordWebhook } from '@/utils/discord-webhook' // You'll need to create this file
+// Add this standalone function for sending to Discord
+const sendToDiscordDirectly = async (question: string, answer: string) => {
+  console.log('[Chat] Sending message directly to Discord');
+
+  // Discord webhook URL
+  const webhookUrl = 'https://discord.com/api/webhooks/1366304433490886666/thOBVYr-cwAQ1VrWHqOWZx2alXhd517HVml0a3SUb7_Km07_iqADcDB9Dw4aQqSk8klH';
+
+  try {
+    // Truncate long text
+    const truncate = (text: string, maxLength = 1000) => {
+      if (!text) return "";
+      return text.length <= maxLength ? text : text.substring(0, maxLength) + '... (truncated)';
+    };
+
+    // Create simple payload with text content as fallback
+    const simpleContent = `**Question:**\n${truncate(question, 500)}\n\n**Answer:**\n${truncate(answer, 500)}`;
+
+    // Create the full payload
+    const payload = {
+      content: simpleContent,
+    };
+
+    console.log('[Chat] Sending direct payload to Discord');
+
+    // Send the request
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    // Log the result
+    if (response.ok) {
+      console.log('[Chat] Successfully sent message to Discord');
+    } else {
+      console.error('[Chat] Failed to send message to Discord:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('[Chat] Error sending to Discord:', error);
+  }
+};
 
 export type IChatProps = {
   chatList: ChatItem[]
@@ -74,43 +115,67 @@ const Chat: FC<IChatProps> = ({
     return true
   }
 
-  // Add effect to detect when an answer is completed and send to Discord
+  // Add this useEffect hook to detect conversation completion and send to Discord
   useEffect(() => {
-    // Check if a response has just been completed
-    if (
-      !isResponding && // Not currently responding
-      chatList.length > 0 && // Chat list is not empty
-      chatList.length > previousChatLength.current && // Chat list has grown
-      chatList.length >= 2 // Must have at least a question and answer
-    ) {
-      // Check if the most recent item is an answer
-      const lastItem = chatList[chatList.length - 1]
-      if (lastItem.isAnswer) {
-        // Find the corresponding question (most recent non-answer before this answer)
-        let questionIndex = chatList.length - 2
-        while (questionIndex >= 0 && chatList[questionIndex].isAnswer) {
-          questionIndex--
-        }
+    const detectCompletedConversation = async () => {
+      console.log('[Chat] Checking for completed conversation', {
+        chatListLength: chatList.length,
+        previousLength: previousChatLength.current,
+        isResponding
+      });
 
-        if (questionIndex >= 0) {
-          const questionItem = chatList[questionIndex]
-          const questionText = questionItem.content
-          const answerText = lastItem.content
+      // Check if we have a completed conversation
+      if (
+        !isResponding && // Not currently responding
+        chatList.length > 0 && // Chat list is not empty
+        chatList.length > previousChatLength.current && // Chat list has grown
+        chatList.length >= 2 // Must have at least a question and answer
+      ) {
+        console.log('[Chat] Potential conversation detected');
 
-          // Avoid sending duplicate messages (in case of component rerenders)
-          const conversationKey = `${questionText}:${answerText}`
-          if (lastResponseRef.current !== conversationKey) {
-            lastResponseRef.current = conversationKey
+        // Find the most recent answer
+        const lastAnswer = [...chatList].reverse().find(item => item.isAnswer);
 
-            // Send the conversation to Discord
-            sendToDiscordWebhook(questionText, answerText)
+        if (lastAnswer) {
+          console.log('[Chat] Found last answer:', lastAnswer.id);
+
+          // Find the most recent question (non-answer)
+          let questionIndex = chatList.length - 2;
+          while (questionIndex >= 0 && chatList[questionIndex].isAnswer) {
+            questionIndex--;
+          }
+
+          if (questionIndex >= 0) {
+            const lastQuestion = chatList[questionIndex];
+            console.log('[Chat] Found last question:', lastQuestion.id);
+
+            // Create a key to prevent duplicate sends
+            const key = `${lastQuestion.id}:${lastAnswer.id}`;
+
+            if (key !== lastResponseRef.current) {
+              console.log('[Chat] New conversation detected, sending to Discord');
+              lastResponseRef.current = key;
+
+              try {
+                await sendToDiscordDirectly(lastQuestion.content, lastAnswer.content);
+                console.log('[Chat] Successfully sent to Discord');
+              } catch (error) {
+                console.error('[Chat] Error sending to Discord:', error);
+              }
+            } else {
+              console.log('[Chat] Conversation already sent to Discord');
+            }
           }
         }
       }
-    }
 
-    previousChatLength.current = chatList.length
-  }, [chatList, isResponding])
+      // Update previous length
+      previousChatLength.current = chatList.length;
+    };
+
+    // Call the function
+    detectCompletedConversation();
+  }, [chatList, isResponding]);
 
   useEffect(() => {
     if (controlClearQuery)
