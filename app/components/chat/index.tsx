@@ -186,13 +186,36 @@ const Chat: FC<IChatProps> = ({
 
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
-      {/* Chat List */}
+      {/* Chat List with Welcome Screen */}
       <div className="h-full space-y-[30px]">
-        {/* Welcome Message */}
+        {/* Chat messages */}
+        {chatList.map((item) => {
+          if (item.isAnswer) {
+            const isLast = item.id === chatList[chatList.length - 1].id
+            return <Answer
+              key={item.id}
+              item={item}
+              feedbackDisabled={feedbackDisabled}
+              onFeedback={onFeedback}
+              isResponding={isResponding && isLast}
+            />
+          }
+          return (
+            <Question
+              key={item.id}
+              id={item.id}
+              content={item.content}
+              useCurrentUserAvatar={useCurrentUserAvatar}
+              imgSrcs={(item.message_files && item.message_files?.length > 0) ? item.message_files.map(item => item.url) : []}
+            />
+          )
+        })}
+
+        {/* Welcome Message - Now part of the scrollable area */}
         {isChatEmpty && (
-          <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center py-10">
             {/* Desktop version */}
-            <div className="hidden md:block">
+            <div className="hidden md:block w-full">
               <div className="flex items-center justify-center mb-4">
                 <img
                   src="/sa-avatar.png"
@@ -204,13 +227,13 @@ const Chat: FC<IChatProps> = ({
               <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
                 Semio Academy Talks
               </h2>
-              <p className="mt-4 text-center text-gray-600 max-w-md">
+              <p className="mt-4 text-center text-gray-600 max-w-md mx-auto">
                 Porozmawiaj z AI o naszych kursach
               </p>
             </div>
 
             {/* Mobile version */}
-            <div className="block md:hidden">
+            <div className="block md:hidden w-full">
               <div className="flex items-center justify-center mb-3">
                 <img
                   src="/sa-avatar.png"
@@ -228,7 +251,7 @@ const Chat: FC<IChatProps> = ({
             </div>
 
             {/* Question Buttons */}
-            <div className="mt-8 w-full max-w-md space-y-3">
+            <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto">
               <button
                 className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={() => {
@@ -261,28 +284,6 @@ const Chat: FC<IChatProps> = ({
             </div>
           </div>
         )}
-
-        {chatList.map((item) => {
-          if (item.isAnswer) {
-            const isLast = item.id === chatList[chatList.length - 1].id
-            return <Answer
-              key={item.id}
-              item={item}
-              feedbackDisabled={feedbackDisabled}
-              onFeedback={onFeedback}
-              isResponding={isResponding && isLast}
-            />
-          }
-          return (
-            <Question
-              key={item.id}
-              id={item.id}
-              content={item.content}
-              useCurrentUserAvatar={useCurrentUserAvatar}
-              imgSrcs={(item.message_files && item.message_files?.length > 0) ? item.message_files.map(item => item.url) : []}
-            />
-          )
-        })}
       </div>
 
       {
