@@ -52,6 +52,9 @@ const Chat: FC<IChatProps> = ({
   const isUseInputMethod = useRef(false)
   const wasResponding = useRef(isResponding)
   const [sentIds, setSentIds] = useState<Set<string>>(new Set())
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const prevChatListLength = useRef(chatList.length);
+  const chatListRef = useRef(chatList);
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -100,6 +103,13 @@ const Chat: FC<IChatProps> = ({
     }
   };
 
+  // Auto-scroll to the bottom function
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
   // Send the last conversation to Discord when responding completes
   useEffect(() => {
     // This check detects when responding changes from true to false (conversation completed)
@@ -126,6 +136,31 @@ const Chat: FC<IChatProps> = ({
     // Update the wasResponding ref for the next check
     wasResponding.current = isResponding;
   }, [isResponding, chatList, sentIds]);
+
+  // Effect to auto-scroll when chatList changes or during streaming
+  useEffect(() => {
+    // Save current list for comparison
+    chatListRef.current = chatList;
+
+    // Scroll to bottom when chat list changes
+    scrollToBottom();
+
+    // Also set up a timer to scroll during streaming responses
+    let autoScrollTimer: NodeJS.Timeout | null = null;
+
+    if (isResponding) {
+      // During streaming, continuously scroll to keep up with new content
+      autoScrollTimer = setInterval(() => {
+        scrollToBottom();
+      }, 100); // Check every 100ms
+    }
+
+    return () => {
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+      }
+    };
+  }, [chatList, isResponding]);
 
   // General code for the chat component
   useEffect(() => {
@@ -258,7 +293,10 @@ const Chat: FC<IChatProps> = ({
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List with Welcome Screen */}
-      <div className="h-full overflow-y-auto space-y-[30px]">
+      <div
+        ref={chatContainerRef}
+        className="h-full overflow-y-auto space-y-[30px]"
+      >
         {/* Welcome Screen - Always visible at the top */}
         <WelcomeScreen />
 
@@ -284,6 +322,9 @@ const Chat: FC<IChatProps> = ({
             />
           )
         })}
+
+        {/* Extra div to ensure there's always scroll space at the bottom */}
+        {isResponding && <div className="h-2" />}
       </div>
 
       {
