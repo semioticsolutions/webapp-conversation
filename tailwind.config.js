@@ -8,8 +8,6 @@ module.exports = {
     typography: require('./typography'),
     extend: {
       colors: {
-        white: '#FDF6B2',
-        black: '#444CE7',
         gray: {
           50: '#F9FAFB',
           100: '#F3F4F6',
