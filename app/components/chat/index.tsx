@@ -150,7 +150,7 @@ const Chat: FC<IChatProps> = ({
               <button
                 className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={() => {
-                  const question = "What courses are available this semester?";
+                  const question = "Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?";
                   handleSend(question);
                 }}
               >
@@ -160,7 +160,7 @@ const Chat: FC<IChatProps> = ({
               <button
                 className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={() => {
-                  const question = "How do I register for a class?";
+                  const question = "Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?";
                   handleSend(question);
                 }}
               >
@@ -170,7 +170,7 @@ const Chat: FC<IChatProps> = ({
               <button
                 className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={() => {
-                  const question = "What learning resources are available?";
+                  const question = "Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?";
                   handleSend(question);
                 }}
               >
