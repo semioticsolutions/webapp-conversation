@@ -673,7 +673,7 @@ const Main: FC<IMainProps> = () => {
             onStartChat={handleStartChat}
             canEditInputs={canEditInputs}
             savedInputs={currInputs as Record<string, any>}
-            onInputsChange={setCurrInputs}
+            {/*onInputsChange={setCurrInputs}*/}
           ></ConfigSence>
 
           {
