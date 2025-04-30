@@ -131,11 +131,11 @@ const Chat: FC<IChatProps> = ({
         {/* Welcome Message */}
         {isChatEmpty && (
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="w-40 h-40 flex items-center justify-center mb-4">
+            <div className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px] border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen">
               <img
-                src="/sa-avatar.png"
-                alt="Semio Academy"
-                className="max-w-full max-h-full"
+                src="/api/placeholder/400/400"
+                alt="Placeholder image"
+                style={{ width: '4vw', height: '4vw' }}
               />
             </div>
             <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
