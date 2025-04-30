@@ -181,13 +181,87 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
-  // Check if chat is empty to show welcome message
-  const isChatEmpty = chatList.length === 0
+  // Welcome screen component - will always be shown regardless of chat status
+  const WelcomeScreen = () => (
+    <div className="mb-10 mt-5">
+      {/* Desktop version */}
+      <div className="hidden md:block w-full">
+        <div className="flex items-center justify-center mb-4">
+          <img
+            src="/sa-avatar.png"
+            alt="Semio Academy"
+            className="max-w-full max-h-full"
+            style={{ width: '4vw', height: '4vw' }}
+          />
+        </div>
+        <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
+          Semio Academy Talks
+        </h2>
+        <p className="mt-4 text-center text-gray-600 max-w-md mx-auto">
+          Porozmawiaj z AI o naszych kursach
+        </p>
+      </div>
+
+      {/* Mobile version */}
+      <div className="block md:hidden w-full">
+        <div className="flex items-center justify-center mb-3">
+          <img
+            src="/sa-avatar.png"
+            alt="Semio Academy"
+            className="max-w-full max-h-full"
+            style={{ width: '12vw', height: '12vw' }}
+          />
+        </div>
+        <h2 className="text-lg font-medium text-center" style={{ fontSize: '5vw', fontWeight: 'bold' }}>
+          Semio Academy Talks
+        </h2>
+        <p className="mt-2 text-center text-gray-600 text-sm max-w-xs mx-auto">
+          Porozmawiaj z AI o naszych kursach
+        </p>
+      </div>
+
+      {/* Question Buttons */}
+      <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto">
+        <button
+          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          onClick={() => {
+            const question = "Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?";
+            handleSend(question);
+          }}
+        >
+          <p className="font-medium">Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?</p>
+        </button>
+
+        <button
+          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          onClick={() => {
+            const question = "Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?";
+            handleSend(question);
+          }}
+        >
+          <p className="font-medium">Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?</p>
+        </button>
+
+        <button
+          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          onClick={() => {
+            const question = "Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?";
+            handleSend(question);
+          }}
+        >
+          <p className="font-medium">Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?</p>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List with Welcome Screen */}
-      <div className="h-full space-y-[30px]">
+      <div className="h-full overflow-y-auto space-y-[30px]">
+        {/* Welcome Screen - Always visible at the top */}
+        <WelcomeScreen />
+
         {/* Chat messages */}
         {chatList.map((item) => {
           if (item.isAnswer) {
@@ -210,80 +284,6 @@ const Chat: FC<IChatProps> = ({
             />
           )
         })}
-
-        {/* Welcome Message - Now part of the scrollable area */}
-        {isChatEmpty && (
-          <div className="flex flex-col items-center justify-center py-10">
-            {/* Desktop version */}
-            <div className="hidden md:block w-full">
-              <div className="flex items-center justify-center mb-4">
-                <img
-                  src="/sa-avatar.png"
-                  alt="Semio Academy"
-                  className="max-w-full max-h-full"
-                  style={{ width: '4vw', height: '4vw' }}
-                />
-              </div>
-              <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
-                Semio Academy Talks
-              </h2>
-              <p className="mt-4 text-center text-gray-600 max-w-md mx-auto">
-                Porozmawiaj z AI o naszych kursach
-              </p>
-            </div>
-
-            {/* Mobile version */}
-            <div className="block md:hidden w-full">
-              <div className="flex items-center justify-center mb-3">
-                <img
-                  src="/sa-avatar.png"
-                  alt="Semio Academy"
-                  className="max-w-full max-h-full"
-                  style={{ width: '12vw', height: '12vw' }}
-                />
-              </div>
-              <h2 className="text-lg font-medium text-center" style={{ fontSize: '5vw', fontWeight: 'bold' }}>
-                Semio Academy Talks
-              </h2>
-              <p className="mt-2 text-center text-gray-600 text-sm max-w-xs mx-auto">
-                Porozmawiaj z AI o naszych kursach
-              </p>
-            </div>
-
-            {/* Question Buttons */}
-            <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto">
-              <button
-                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  const question = "Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?";
-                  handleSend(question);
-                }}
-              >
-                <p className="font-medium">Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?</p>
-              </button>
-
-              <button
-                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  const question = "Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?";
-                  handleSend(question);
-                }}
-              >
-                <p className="font-medium">Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?</p>
-              </button>
-
-              <button
-                className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  const question = "Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?";
-                  handleSend(question);
-                }}
-              >
-                <p className="font-medium">Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?</p>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {
