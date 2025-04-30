@@ -133,16 +133,16 @@ const Chat: FC<IChatProps> = ({
           <div className="flex flex-col items-center justify-center h-full">
             <div className="w-40 h-40 flex items-center justify-center mb-4">
               <img
-                src="/logo.png"
+                src="/sa-avatar.png"
                 alt="Semio Academy"
                 className="max-w-full max-h-full"
               />
             </div>
-            <h2 className="text-xl font-medium text-center">
+            <h2 className="text-xl font-medium text-center" style="font-size: 2vw; font-weight: bold;">
               Semio Academy Talks
             </h2>
             <p className="mt-4 text-center text-gray-600 max-w-md">
-              Welcome to Semio Academy's intelligent assistant. Ask any question about our courses, schedule, or learning materials.
+              Porozmawiaj z AI o naszych kursach
             </p>
 
             {/* Question Buttons */}
