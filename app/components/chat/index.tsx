@@ -131,20 +131,41 @@ const Chat: FC<IChatProps> = ({
         {/* Welcome Message */}
         {isChatEmpty && (
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="w-40 h-40 flex items-center justify-center mb-4">
-              <img
-                src="/sa-avatar.png"
-                alt="Semio Academy"
-                className="max-w-full max-h-full"
-                style={{ width: '4vw', height: '4vw' }}
-              />
+            {/* Desktop version */}
+            <div className="hidden md:block">
+              <div className="w-40 h-40 flex items-center justify-center mb-4">
+                <img
+                  src="/sa-avatar.png"
+                  alt="Semio Academy"
+                  className="max-w-full max-h-full"
+                  style={{ width: '4vw', height: '4vw' }}
+                />
+              </div>
+              <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
+                Semio Academy Talks
+              </h2>
+              <p className="mt-4 text-center text-gray-600 max-w-md">
+                Porozmawiaj z AI o naszych kursach
+              </p>
             </div>
-            <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
-              Semio Academy Talks
-            </h2>
-            <p className="mt-4 text-center text-gray-600 max-w-md">
-              Porozmawiaj z AI o naszych kursach
-            </p>
+
+            {/* Mobile version */}
+            <div className="block md:hidden">
+              <div className="w-24 h-24 flex items-center justify-center mb-3">
+                <img
+                  src="/sa-avatar.png"
+                  alt="Semio Academy"
+                  className="max-w-full max-h-full"
+                  style={{ width: '12vw', height: '12vw' }}
+                />
+              </div>
+              <h2 className="text-lg font-medium text-center" style={{ fontSize: '5vw', fontWeight: 'bold' }}>
+                Semio Academy Talks
+              </h2>
+              <p className="mt-2 text-center text-gray-600 text-sm max-w-xs mx-auto">
+                Porozmawiaj z AI o naszych kursach
+              </p>
+            </div>
 
             {/* Question Buttons */}
             <div className="mt-8 w-full max-w-md space-y-3">
