@@ -53,7 +53,7 @@ const WorkflowProcessItem = ({
         hideInfo ? 'mx-[-8px] px-1' : 'w-full px-3',
       )}
       style={{
-        background, display: none,
+        background,
       }}
     >
       <div
