@@ -92,12 +92,18 @@ const Main: FC<IMainProps> = () => {
     // parse variables in introduction
     setChatList(generateNewChatListWithOpenStatement('', inputs))
   }
+
+  /*
   const hasSetInputs = (() => {
     if (!isNewConversation)
       return true
 
     return isChatStarted
   })()
+    */
+
+  // true powoduje, że ekran startowy nie jest wyświetlany
+  const hasSetInputs = true
 
   const conversationName = currConversationInfo?.name || t('app.chat.newChatDefaultName') as string
   const conversationIntroduction = currConversationInfo?.introduction || ''
