@@ -133,7 +133,7 @@ const Chat: FC<IChatProps> = ({
           <div className="flex flex-col items-center justify-center h-full">
             {/* Desktop version */}
             <div className="hidden md:block">
-              <div className="w-40 h-40 flex items-center justify-center mb-4">
+              <div className="flex items-center justify-center mb-4">
                 <img
                   src="/sa-avatar.png"
                   alt="Semio Academy"
@@ -151,7 +151,7 @@ const Chat: FC<IChatProps> = ({
 
             {/* Mobile version */}
             <div className="block md:hidden">
-              <div className="w-24 h-24 flex items-center justify-center mb-3">
+              <div className="flex items-center justify-center mb-3">
                 <img
                   src="/sa-avatar.png"
                   alt="Semio Academy"
