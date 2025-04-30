@@ -226,13 +226,13 @@ const Chat: FC<IChatProps> = ({
             src="/sa-avatar.png"
             alt="Semio Academy"
             className="max-w-full max-h-full"
-            style={{ width: '4vw', height: '4vw' }}
+            style={{ width: '8vw', height: '8vw' }}
           />
         </div>
         <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
           Semio Academy Talks
         </h2>
-        <p className="mt-4 text-center text-gray-600 max-w-md mx-auto">
+        <p className="mt-4 text-center text-gray-600 max-w-md mx-auto" style={{ width: '80%' }}>
           Porozmawiaj z AI o naszych kursach
         </p>
       </div>
@@ -256,9 +256,9 @@ const Chat: FC<IChatProps> = ({
       </div>
 
       {/* Question Buttons */}
-      <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto">
+      <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto" style={{ width: '80%' }}>
         <button
-          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          className="w-full p-4 text-left bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => {
             const question = "Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?";
             handleSend(question);
@@ -268,7 +268,7 @@ const Chat: FC<IChatProps> = ({
         </button>
 
         <button
-          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          className="w-full p-4 text-left bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => {
             const question = "Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?";
             handleSend(question);
@@ -278,7 +278,7 @@ const Chat: FC<IChatProps> = ({
         </button>
 
         <button
-          className="w-full p-4 text-left bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+          className="w-full p-4 text-left bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => {
             const question = "Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?";
             handleSend(question);
