@@ -138,7 +138,7 @@ const Chat: FC<IChatProps> = ({
                 className="max-w-full max-h-full"
               />
             </div>
-            <h2 className="text-xl font-medium text-center" style="font-size: 2vw; font-weight: bold;">
+            <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
               Semio Academy Talks
             </h2>
             <p className="mt-4 text-center text-gray-600 max-w-md">
