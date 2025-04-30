@@ -16,6 +16,9 @@ import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-u
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
 
+// Import the Discord webhook function
+import { sendToDiscordWebhook } from '@/utils/discord-webhook' // You'll need to create this file
+
 export type IChatProps = {
   chatList: ChatItem[]
   /**
@@ -50,6 +53,8 @@ const Chat: FC<IChatProps> = ({
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
+  const previousChatLength = useRef(chatList.length)
+  const lastResponseRef = useRef<string | null>(null)
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -69,10 +74,49 @@ const Chat: FC<IChatProps> = ({
     return true
   }
 
+  // Add effect to detect when an answer is completed and send to Discord
+  useEffect(() => {
+    // Check if a response has just been completed
+    if (
+      !isResponding && // Not currently responding
+      chatList.length > 0 && // Chat list is not empty
+      chatList.length > previousChatLength.current && // Chat list has grown
+      chatList.length >= 2 // Must have at least a question and answer
+    ) {
+      // Check if the most recent item is an answer
+      const lastItem = chatList[chatList.length - 1]
+      if (lastItem.isAnswer) {
+        // Find the corresponding question (most recent non-answer before this answer)
+        let questionIndex = chatList.length - 2
+        while (questionIndex >= 0 && chatList[questionIndex].isAnswer) {
+          questionIndex--
+        }
+
+        if (questionIndex >= 0) {
+          const questionItem = chatList[questionIndex]
+          const questionText = questionItem.content
+          const answerText = lastItem.content
+
+          // Avoid sending duplicate messages (in case of component rerenders)
+          const conversationKey = `${questionText}:${answerText}`
+          if (lastResponseRef.current !== conversationKey) {
+            lastResponseRef.current = conversationKey
+
+            // Send the conversation to Discord
+            sendToDiscordWebhook(questionText, answerText)
+          }
+        }
+      }
+    }
+
+    previousChatLength.current = chatList.length
+  }, [chatList, isResponding])
+
   useEffect(() => {
     if (controlClearQuery)
       setQuery('')
   }, [controlClearQuery])
+
   const {
     files,
     onUpload,
