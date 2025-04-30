@@ -54,7 +54,8 @@ const Chat: FC<IChatProps> = ({
   const [sentIds, setSentIds] = useState<Set<string>>(new Set())
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevChatListLength = useRef(chatList.length);
-  const chatListRef = useRef(chatList);
+  const isFirstLoad = useRef(true);
+  const hasUserInteracted = useRef(false);
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -103,10 +104,16 @@ const Chat: FC<IChatProps> = ({
     }
   };
 
-  // Auto-scroll to the bottom function
+  // Auto-scroll functions
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  const scrollToTop = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = 0;
     }
   };
 
@@ -137,29 +144,45 @@ const Chat: FC<IChatProps> = ({
     wasResponding.current = isResponding;
   }, [isResponding, chatList, sentIds]);
 
-  // Effect to auto-scroll when chatList changes or during streaming
+  // Initial render effect - scroll to top only on first load
   useEffect(() => {
-    // Save current list for comparison
-    chatListRef.current = chatList;
+    if (isFirstLoad.current) {
+      // Set to top on initial load
+      scrollToTop();
+      isFirstLoad.current = false;
+    }
+  }, []);
 
-    // Scroll to bottom when chat list changes
-    scrollToBottom();
+  // Auto-scroll effect based on state changes
+  useEffect(() => {
+    // If user has interacted or system is responding, enable auto-scrolling
+    if (hasUserInteracted.current || isResponding) {
+      // Set up auto-scrolling during streaming
+      let autoScrollTimer: NodeJS.Timeout | null = null;
 
-    // Also set up a timer to scroll during streaming responses
-    let autoScrollTimer: NodeJS.Timeout | null = null;
-
-    if (isResponding) {
-      // During streaming, continuously scroll to keep up with new content
-      autoScrollTimer = setInterval(() => {
+      if (isResponding) {
+        // Immediate scroll
         scrollToBottom();
-      }, 100); // Check every 100ms
+
+        // Continuous scroll during streaming
+        autoScrollTimer = setInterval(() => {
+          scrollToBottom();
+        }, 100);
+      } else if (chatList.length > prevChatListLength.current) {
+        // New message added, scroll to it
+        scrollToBottom();
+      }
+
+      // Cleanup
+      return () => {
+        if (autoScrollTimer) {
+          clearInterval(autoScrollTimer);
+        }
+      };
     }
 
-    return () => {
-      if (autoScrollTimer) {
-        clearInterval(autoScrollTimer);
-      }
-    };
+    // Update the previous length reference
+    prevChatListLength.current = chatList.length;
   }, [chatList, isResponding]);
 
   // General code for the chat component
@@ -183,6 +206,9 @@ const Chat: FC<IChatProps> = ({
 
     if ((!messageToSend || messageToSend.trim() === '') || (checkCanSend && !checkCanSend()))
       return
+
+    // Mark that user has interacted, which will enable auto-scrolling
+    hasUserInteracted.current = true;
 
     onSend(messageToSend, files.filter(file => file.progress !== -1).map(fileItem => ({
       type: 'image',
