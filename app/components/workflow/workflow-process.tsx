@@ -54,6 +54,8 @@ const WorkflowProcessItem = ({
       )}
       style={{
         background,
+        display: 'none'
+
       }}
     >
       <div
