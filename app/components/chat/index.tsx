@@ -154,7 +154,7 @@ const Chat: FC<IChatProps> = ({
                   handleSend(question);
                 }}
               >
-                <p className="font-medium">What courses are available this semester?</p>
+                <p className="font-medium">Dla kogo są zajęcia w Semio Academy i czego się tam nauczysz?</p>
               </button>
 
               <button
@@ -164,7 +164,7 @@ const Chat: FC<IChatProps> = ({
                   handleSend(question);
                 }}
               >
-                <p className="font-medium">How do I register for a class?</p>
+                <p className="font-medium">Do czego służą takie narzędzia jak znak, kody, mapa kodów, RDE, kwadrat semiotyczny?</p>
               </button>
 
               <button
@@ -174,7 +174,7 @@ const Chat: FC<IChatProps> = ({
                   handleSend(question);
                 }}
               >
-                <p className="font-medium">What learning resources are available?</p>
+                <p className="font-medium">Jak semiotyka marketingowa może pomóc w budowaniu odróżnialnego wizerunku marki?</p>
               </button>
             </div>
           </div>
