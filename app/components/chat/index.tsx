@@ -232,7 +232,7 @@ const Chat: FC<IChatProps> = ({
         <h2 className="text-xl font-medium text-center" style={{ fontSize: '2vw', fontWeight: 'bold' }}>
           Semio Academy Talks
         </h2>
-        <p className="mt-4 text-center text-gray-600 max-w-md mx-auto" style={{ width: '80%' }}>
+        <p className="mt-4 text-center text-gray-600 mmx-auto" style={{ width: '80%' }}>
           Porozmawiaj z AI o naszych kursach
         </p>
       </div>
@@ -256,7 +256,7 @@ const Chat: FC<IChatProps> = ({
       </div>
 
       {/* Question Buttons */}
-      <div className="mt-8 w-full max-w-md space-y-3 px-4 mx-auto" style={{ width: '80%' }}>
+      <div className="mt-8 w-full space-y-3 px-4 mx-auto" style={{ width: '80%' }}>
         <button
           className="w-full p-4 text-left bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
           onClick={() => {
